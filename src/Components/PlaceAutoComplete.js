@@ -1,5 +1,5 @@
 import React from 'react';
-import './MapHeaderStyle.css';
+import './Maps/MapHeaderStyle.css';
 import { Search } from 'semantic-ui-react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 

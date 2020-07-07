@@ -5,6 +5,8 @@ const locate = ({ panTo }) => {
 		<div className="locate-ctrl">
 			<Icon
 				name="compass"
+				size="big"
+				color="orange"
 				onClick={() => {
 					navigator.geolocation.getCurrentPosition(({ coords }) => {
 						panTo({
