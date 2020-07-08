@@ -1,10 +1,10 @@
 import React from 'react';
 import { Marker } from '@react-google-maps/api';
-
-function ShroomMarker({ marker, setSelected }) {
+import PropTypes from 'prop-types';
+const ShroomMarker = (props) => {
+	const { marker, onClick } = props;
 	return (
 		<Marker
-			key={marker.time.toISOString()}
 			position={{ lat: marker.lat, lng: marker.lng }}
 			icon={{
 				url: '/mushroom.svg',
@@ -12,9 +12,12 @@ function ShroomMarker({ marker, setSelected }) {
 				origin: new window.google.maps.Point(0, 0),
 				anchor: new window.google.maps.Point(15, 15),
 			}}
-			onClick={() => setSelected}
+			onClick={onClick}
 		/>
 	);
-}
-
+};
+ShroomMarker.propTypes = {
+	marker: PropTypes.object,
+	onClick: PropTypes.func,
+};
 export default ShroomMarker;

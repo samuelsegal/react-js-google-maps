@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import midnightCommander from '../../Styles/midnightCommander';
 import Logo from '../Logo';
 import BaseMap from './BaseMap';
-import ShroomMarker from '../Markers/ShroomMarker';
 
 const mapOptions = {
 	styles: midnightCommander,
@@ -11,7 +10,7 @@ const mapOptions = {
 };
 
 function LocationMap() {
-	return <BaseMap addSearch addLocater logo={<Logo />} options={mapOptions} customMarker={ShroomMarker} />;
+	return <BaseMap addSearch addLocater logo={<Logo />} options={mapOptions} customMarker="ShroomMarker" />;
 }
 
 export default LocationMap;
