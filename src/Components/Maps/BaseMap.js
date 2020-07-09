@@ -1,6 +1,5 @@
-import React, { useState, useRef, useCallback, memo } from 'react';
+import React, { useRef, useCallback, memo } from 'react';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import { formatRelative } from 'date-fns';
 import PropTypes from 'prop-types';
 
 import { GOOGLE_GEOCODE_API_KEY } from '../../Constants';
@@ -8,10 +7,6 @@ import PlaceAutoComplete from '../PlaceAutoComplete';
 import Locate from '../Locate';
 import mapStyles from '../../Styles/mapStyles';
 import './MapHeaderStyle.css';
-import ShroomMarker from '../Markers/ShroomMarker';
-import BasicMarker from '../Markers/BasicMarker';
-import _ from 'lodash';
-import BasicWindow from '../InfoWindows/BasicWindow';
 import Logo from '../Logo';
 const libraries = ['places'];
 function BaseMap({
@@ -24,16 +19,24 @@ function BaseMap({
 	zoom,
 	center,
 	customComponents,
-	customMarker,
 }) {
-	const [markers, setMarkers] = useState([]);
-	const [selected, setSelected] = useState(null);
-	const onMarkerClick = useCallback((e) => {
-		return console.log(e);
-	});
-	const onMapClick = useCallback((event) => {
-		console.log(event);
-		setMarkers((current) => [...current, { lat: event.latLng.lat(), lng: event.latLng.lng(), time: new Date() }]);
+	const onMapClick = useCallback((e) => {
+		console.log('LAT', e.latLng.lat);
+		var marker = new window.google.maps.Marker({
+			position: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+			map: mapRef.current,
+			click: () => console.log('wtf'),
+		});
+		var yourContent = new window.google.maps.InfoWindow({
+			content: 'blah blah',
+		});
+
+		console.log(marker);
+		marker.setMap(mapRef.current);
+		window.google.maps.event.addListener(marker, 'click', function () {
+			yourContent.open(mapRef.current, marker);
+		});
+		return marker;
 	}, []);
 	const mapRef = useRef();
 	const onMapLoad = useCallback((map) => {
@@ -60,44 +63,7 @@ function BaseMap({
 				onClick={onMapClick}
 				onLoad={onMapLoad}
 			>
-				{
-					/* Child components, such as markers, info windows, etc. */
-					markers.map((marker) => {
-						/**
-						 * TODO: Look into more dynamic solution for providing
-						 * self defined markers that can use setSelected.
-						 * Also currently all the markers are rendering for
-						 * every click. THis is no bueno
-						 */
-						const key = _.random(2, 3, true);
-						console.log(marker);
-						switch (customMarker) {
-							case 'ShroomMarker':
-								return <ShroomMarker key={key} marker={marker} onClick={() => setSelected(marker)} />;
-							case 'BasicMarker':
-								return <BasicMarker key={key} marker={marker} onClick={() => setSelected(marker)} />;
-							default:
-								return <BasicMarker key={key} marker={marker} onClick={() => setSelected(marker)} />;
-						}
-					})
-				}
-
-				{selected ? (
-					//TODO: Need to be able to add custom infoWindows.
-					<BasicWindow
-						key={_.random()}
-						position={{ lat: selected.lat, lng: selected.lng }}
-						onClick={() => setSelected(null)}
-						onCloseClick={() => setSelected(null)}
-					>
-						<div>
-							<h2>Mark a gig!</h2>
-							<p>Arriving {formatRelative(selected.time, new Date())} </p>
-						</div>
-					</BasicWindow>
-				) : (
-					''
-				)}
+				{/* Child components, such as markers, info windows, etc. */}
 
 				<></>
 			</GoogleMap>

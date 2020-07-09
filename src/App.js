@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import LocationMap from './Components/Maps/LocationMap';
 import { Container } from 'semantic-ui-react';
 
