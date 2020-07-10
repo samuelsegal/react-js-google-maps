@@ -1,4 +1,4 @@
-### Demonstration of using google maps in react via [@react-google-maps/api]( https://www.npmjs.com/package/@react-google-maps/api)
+### Sandbox for google maps in react 
 
 
 ### References
