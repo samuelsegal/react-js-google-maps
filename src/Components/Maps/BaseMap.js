@@ -8,8 +8,8 @@ import Locate from '../Locate';
 import mapStyles from '../../Styles/mapStyles';
 import './MapHeaderStyle.css';
 import Logo from '../Logo';
-const libraries = ['places'];
 function BaseMap({
+	children,
 	addSearch,
 	addLocater,
 	logo,
@@ -19,29 +19,32 @@ function BaseMap({
 	zoom,
 	center,
 	customComponents,
+	libraries,
+	infoWindowContent,
 }) {
+	const mapRef = useRef();
+
 	const onMapClick = useCallback((e) => {
-		console.log('LAT', e.latLng.lat);
-		var marker = new window.google.maps.Marker({
+		const marker = new window.google.maps.Marker({
 			position: { lat: e.latLng.lat(), lng: e.latLng.lng() },
 			map: mapRef.current,
 			click: () => console.log('wtf'),
 		});
-		var yourContent = new window.google.maps.InfoWindow({
-			content: 'blah blah',
+		const infoWindow = new window.google.maps.InfoWindow({
+			content: '<div><Input type="button"/></div>',
 		});
 
-		console.log(marker);
 		marker.setMap(mapRef.current);
 		window.google.maps.event.addListener(marker, 'click', function () {
-			yourContent.open(mapRef.current, marker);
+			infoWindow.open(mapRef.current, marker);
 		});
 		return marker;
 	}, []);
-	const mapRef = useRef();
+
 	const onMapLoad = useCallback((map) => {
 		mapRef.current = map;
 	}, []);
+
 	const panTo = useCallback(({ lat, lng }) => {
 		mapRef.current.panTo({ lat, lng });
 		mapRef.current.setZoom(14);
@@ -65,16 +68,16 @@ function BaseMap({
 			>
 				{/* Child components, such as markers, info windows, etc. */}
 
-				<></>
+				<>{children}</>
 			</GoogleMap>
 		</LoadScript>
 	);
 }
 
 const defaultContainerStyle = {
-	position: 'absolute',
+	position: 'relative',
 	width: '100%',
-	height: '100%',
+	height: '400px',
 };
 const defaultOptions = {
 	styles: mapStyles,
@@ -92,9 +95,15 @@ BaseMap.defaultProps = {
 	center: center,
 	containerStyle: defaultContainerStyle,
 	googleAPIKey: GOOGLE_GEOCODE_API_KEY,
-	logo: '',
+	logo: <></>,
 	customComponents: [],
 	customMarker: 'BasicMarker',
+	infoWindowContent: `
+		<div>
+			<div>Default InfoWindow</div>
+		</div>
+	`,
+	libraries: ['places', 'drawing'],
 };
 
 BaseMap.propTypes = {
@@ -108,5 +117,6 @@ BaseMap.propTypes = {
 	center: PropTypes.object,
 	customComponents: PropTypes.any,
 	customMarker: PropTypes.string,
+	libraries: PropTypes.array,
 };
 export default memo(BaseMap);

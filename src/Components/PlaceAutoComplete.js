@@ -13,7 +13,7 @@ function PlaceAutoComplete({ panTo }) {
 	} = usePlacesAutocomplete({
 		requestOptions: {
 			location: { lat: () => 32, lng: () => -81 },
-			radius: 200 * 1000,
+			radius: 200,
 		},
 	});
 	return ready ? (
